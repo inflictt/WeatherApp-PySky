@@ -26,8 +26,8 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['*']  # We will narrow this down later
-
+# Replace 'pysky-backend.onrender.com' with your actual Render URL
+ALLOWED_HOSTS = ['pysky-backend.onrender.com', 'localhost', '127.0.0.1']
 
 # Application definition
 
@@ -119,6 +119,8 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 
+# Replace 'pysky.vercel.app' with your actual live Vercel URL
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
+    "https://pysky.vercel.app", 
 ]
