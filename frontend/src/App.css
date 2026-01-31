@@ -15,13 +15,14 @@
 body {
   background-color: var(--bg-color);
   color: var(--text-primary);
-  font-family: -apple-system, sans-serif;
-  overflow-x: hidden; /* Fixes the white space on the right */
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  overflow-x: hidden;
+  min-height: 100vh;
 }
 
 .container {
   width: 100%;
-  padding: 15px;
+  padding: 20px 15px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -29,7 +30,7 @@ body {
 
 .content-wrapper {
   width: 100%;
-  max-width: 1100px;
+  max-width: 1200px;
 }
 
 /* Header & Toggle */
@@ -37,18 +38,28 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
 }
 
-h1 { font-size: 20px; color: var(--accent-blue); }
+h1 { 
+  font-size: 22px; 
+  color: var(--accent-blue);
+  font-weight: 600;
+}
 
 .unit-btn {
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
   color: white;
-  padding: 5px 12px;
+  padding: 6px 14px;
   border-radius: 20px;
-  font-size: 12px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.unit-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
 }
 
 /* Search Bar - Full Width on Mobile */
@@ -59,9 +70,11 @@ h1 { font-size: 20px; color: var(--accent-blue); }
 
 .search-bar {
   display: flex;
+  align-items: center;
   background: var(--card-bg);
   border-radius: 12px;
-  padding: 5px;
+  padding: 8px 12px;
+  width: 100%;
 }
 
 .search-bar input {
@@ -69,8 +82,22 @@ h1 { font-size: 20px; color: var(--accent-blue); }
   background: transparent;
   border: none;
   color: white;
-  padding: 10px;
+  padding: 8px 10px;
   outline: none;
+  font-size: 15px;
+}
+
+.search-bar input::placeholder {
+  color: var(--text-secondary);
+}
+
+.search-bar button {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 18px;
+  cursor: pointer;
+  padding: 4px 8px;
 }
 
 /* Main Grid: Vertical on Mobile, Split on Desktop */
@@ -78,71 +105,317 @@ h1 { font-size: 20px; color: var(--accent-blue); }
   display: grid;
   gap: 20px;
   grid-template-columns: 1fr;
+  width: 100%;
 }
 
 .card {
   background: var(--card-bg);
   border-radius: 20px;
-  padding: 20px;
+  padding: 25px 20px;
   width: 100%;
 }
 
-/* Temp Display: Tidy for small screens */
-.temp-container {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  margin: 20px 0;
+/* Weather Card Header */
+.location-info {
+  margin-bottom: 10px;
 }
 
-.temp { font-size: 56px; font-weight: bold; color: var(--accent-blue); }
-.main-icon { font-size: 60px; }
+.location-info h2 {
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
 
-/* Highlights: 2x2 Grid on Mobile */
+.location-info p {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+/* Temp Display: Clean layout */
+.temp-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 25px 0;
+  padding: 0 10px;
+}
+
+.temp-left {
+  flex: 1;
+}
+
+.temp { 
+  font-size: 64px; 
+  font-weight: 700; 
+  color: var(--accent-blue);
+  line-height: 1;
+}
+
+.main-icon { 
+  font-size: 80px;
+  filter: drop-shadow(0 4px 8px rgba(0, 149, 255, 0.3));
+}
+
+.feels-like {
+  margin-top: 10px;
+}
+
+.feels-like p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin: 3px 0;
+}
+
+/* Sun Times */
+.sun-times {
+  display: flex;
+  gap: 20px;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sun-time {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.sun-time span {
+  opacity: 0.7;
+}
+
+/* Highlights: 2x2 Grid on Mobile, 2x2 on Desktop */
+.highlights-section {
+  margin-top: 25px;
+}
+
+.highlights-section h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 15px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
 .highlights-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-top: 20px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
 }
 
 .highlight-item {
-  background: rgba(255, 255, 255, 0.03);
-  padding: 12px;
-  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 16px;
+  border-radius: 15px;
   text-align: center;
+  transition: all 0.2s;
 }
 
-.highlight-item span { font-size: 10px; color: var(--text-secondary); text-transform: uppercase; }
-.highlight-item strong { display: block; font-size: 14px; margin-top: 4px; }
+.highlight-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.highlight-item span { 
+  font-size: 11px; 
+  color: var(--text-secondary); 
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.highlight-item strong { 
+  display: block; 
+  font-size: 20px;
+  font-weight: 600;
+  margin-top: 4px;
+  color: var(--text-primary);
+}
+
+/* Forecast Section */
+.forecast-section {
+  width: 100%;
+}
+
+.forecast-section h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 15px;
+}
 
 /* Forecast: Horizontal Swipe on Mobile */
 .forecast-row {
   display: flex;
-  gap: 10px;
+  gap: 12px;
   overflow-x: auto;
   padding-bottom: 10px;
-  scrollbar-width: none; /* Hide scrollbar for Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent-blue) transparent;
 }
 
-.forecast-row::-webkit-scrollbar { display: none; } /* Hide scrollbar for Chrome/Safari */
+.forecast-row::-webkit-scrollbar { 
+  height: 6px;
+}
+
+.forecast-row::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.forecast-row::-webkit-scrollbar-thumb {
+  background: var(--accent-blue);
+  border-radius: 10px;
+}
 
 .forecast-card {
-  min-width: 90px;
+  min-width: 100px;
   background: var(--card-bg);
-  padding: 15px;
+  padding: 18px 15px;
   border-radius: 15px;
   text-align: center;
+  flex-shrink: 0;
+  transition: all 0.2s;
 }
 
-/* Desktop Upgrade: The 70/30 Split */
+.forecast-card:hover {
+  background: #2a3544;
+  transform: translateY(-2px);
+}
+
+.forecast-card .time {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+}
+
+.forecast-card .forecast-temp {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--accent-blue);
+  margin: 10px 0;
+}
+
+.forecast-card .forecast-icon {
+  font-size: 32px;
+  margin: 8px 0;
+}
+
+/* Mobile Optimizations */
+@media (max-width: 899px) {
+  .container {
+    padding: 15px 12px;
+  }
+  
+  h1 {
+    font-size: 20px;
+  }
+  
+  .location-info h2 {
+    font-size: 24px;
+  }
+  
+  .temp {
+    font-size: 56px;
+  }
+  
+  .main-icon {
+    font-size: 60px;
+  }
+  
+  .card {
+    padding: 20px 16px;
+  }
+  
+  .highlights-grid {
+    gap: 10px;
+  }
+  
+  .highlight-item {
+    padding: 14px 10px;
+  }
+  
+  .highlight-item strong {
+    font-size: 18px;
+  }
+  
+  .forecast-card {
+    min-width: 90px;
+    padding: 15px 12px;
+  }
+  
+  .forecast-card .forecast-temp {
+    font-size: 24px;
+  }
+}
+
+/* Desktop: The 70/30 Split */
 @media (min-width: 900px) {
+  .container {
+    padding: 30px 20px;
+  }
+  
   .main-grid {
-    grid-template-columns: 7fr 3fr;
+    grid-template-columns: 2fr 1fr;
     align-items: start;
   }
+  
+  /* Make forecast vertical on desktop */
   .forecast-row {
     flex-direction: column;
     overflow-x: visible;
+    overflow-y: auto;
+    max-height: 600px;
+  }
+  
+  .forecast-card {
+    width: 100%;
+    min-width: unset;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: left;
+    padding: 15px 20px;
+  }
+  
+  .forecast-card .time {
+    margin-bottom: 0;
+    min-width: 70px;
+  }
+  
+  .forecast-card .forecast-icon {
+    margin: 0;
+  }
+  
+  .forecast-card .forecast-temp {
+    margin: 0;
+    min-width: 80px;
+    text-align: right;
+  }
+  
+  /* Better highlights grid on desktop */
+  .highlights-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+  }
+  
+  .highlight-item {
+    padding: 20px;
+  }
+  
+  .highlight-item strong {
+    font-size: 24px;
+  }
+}
+
+/* Extra Large Desktop */
+@media (min-width: 1200px) {
+  .highlights-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  
+  .content-wrapper {
+    max-width: 1400px;
   }
 }
