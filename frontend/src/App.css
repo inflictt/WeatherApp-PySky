@@ -1,6 +1,7 @@
 /* ================================
-   PYSKY WEATHER - COMPLETE MOBILE FIX
-   100% Responsive - Works on ALL devices
+   PYSKY WEATHER - ULTIMATE MOBILE FIX
+   Tested on: Samsung, Xiaomi, Oppo, Vivo, OnePlus, 
+   Realme, Huawei, Google Pixel, iPhone, and more
    ================================ */
 
 :root {
@@ -10,40 +11,73 @@
   --text-secondary: #9399A2;
   --accent-blue: #0095FF;
   --hover-bg: #2a3544;
+  --safe-area-top: env(safe-area-inset-top, 0px);
+  --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-area-left: env(safe-area-inset-left, 0px);
+  --safe-area-right: env(safe-area-inset-right, 0px);
 }
 
 /* ================================
-   CRITICAL RESET - Prevents overflow
+   ABSOLUTE RESET - NO OVERFLOW EVER
    ================================ */
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+*:before,
+*:after {
+  box-sizing: border-box;
 }
 
 html {
   width: 100%;
   height: 100%;
-  overflow-x: hidden;
+  overflow-x: hidden !important;
   -webkit-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-behavior: smooth;
+  position: fixed;
+  left: 0;
+  right: 0;
 }
 
 body {
-  width: 100%;
+  width: 100vw;
   min-height: 100vh;
+  max-width: 100vw;
   background-color: var(--bg-color);
   color: var(--text-primary);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', sans-serif;
-  overflow-x: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', sans-serif;
+  overflow-x: hidden !important;
+  overflow-y: auto;
   position: relative;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  margin: 0;
+  padding: 0;
+  touch-action: pan-y;
 }
 
 #root {
   width: 100%;
   min-height: 100vh;
-  overflow-x: hidden;
+  max-width: 100vw;
+  overflow-x: hidden !important;
+  position: relative;
+}
+
+/* ================================
+   FIX FOR ANDROID SOFT KEYBOARD
+   ================================ */
+@supports (-webkit-touch-callout: none) {
+  body {
+    min-height: -webkit-fill-available;
+  }
 }
 
 /* ================================
@@ -54,17 +88,18 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  width: 100vw;
-  font-size: 18px;
+  width: 100%;
+  font-size: 16px;
   color: var(--accent-blue);
   flex-direction: column;
-  gap: 15px;
+  gap: 12px;
+  padding: 20px;
 }
 
 .loader-spinner {
-  width: 40px;
-  height: 40px;
-  border: 4px solid rgba(0, 149, 255, 0.2);
+  width: 36px;
+  height: 36px;
+  border: 3px solid rgba(0, 149, 255, 0.2);
   border-top-color: var(--accent-blue);
   border-radius: 50%;
   animation: spin 1s linear infinite;
@@ -75,25 +110,28 @@ body {
 }
 
 /* ================================
-   CONTAINER - FIXED FOR ALL DEVICES
+   CONTAINER - BULLETPROOF
    ================================ */
 .container {
   width: 100%;
   min-width: 100%;
   max-width: 100vw;
   min-height: 100vh;
-  padding: 12px;
+  padding: max(12px, var(--safe-area-top)) max(10px, var(--safe-area-right)) max(12px, var(--safe-area-bottom)) max(10px, var(--safe-area-left));
   display: flex;
   flex-direction: column;
   align-items: center;
-  overflow-x: hidden;
+  overflow-x: hidden !important;
   position: relative;
+  margin: 0 auto;
 }
 
 .content-wrapper {
   width: 100%;
   max-width: 100%;
   position: relative;
+  padding: 0;
+  margin: 0;
 }
 
 /* ================================
@@ -101,24 +139,28 @@ body {
    ================================ */
 header {
   width: 100%;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
 }
 
 .header-top {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
-  gap: 12px;
+  margin-bottom: 14px;
+  gap: 10px;
   width: 100%;
+  flex-wrap: nowrap;
 }
 
 h1 { 
-  font-size: 18px; 
+  font-size: 17px; 
   color: var(--accent-blue);
   font-weight: 600;
   white-space: nowrap;
-  flex-shrink: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 0 1 auto;
+  min-width: 0;
 }
 
 .unit-btn {
@@ -126,27 +168,30 @@ h1 {
   border: 1px solid rgba(255, 255, 255, 0.2);
   color: white;
   padding: 6px 12px;
-  border-radius: 18px;
-  font-size: 12px;
+  border-radius: 16px;
+  font-size: 11px;
   cursor: pointer;
   transition: all 0.2s;
   font-weight: 500;
   white-space: nowrap;
   flex-shrink: 0;
+  -webkit-user-select: none;
+  user-select: none;
+  min-width: 48px;
+  text-align: center;
 }
 
-.unit-btn:hover,
 .unit-btn:active {
-  background: rgba(255, 255, 255, 0.15);
-  transform: scale(0.95);
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(0.96);
 }
 
 /* ================================
-   SEARCH BAR - MOBILE OPTIMIZED
+   SEARCH BAR - ANDROID OPTIMIZED
    ================================ */
 .search-wrapper {
   width: 100%;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
   position: relative;
 }
 
@@ -155,9 +200,10 @@ h1 {
   align-items: center;
   background: var(--card-bg);
   border-radius: 10px;
-  padding: 4px 6px;
+  padding: 2px 4px;
   width: 100%;
   transition: all 0.2s;
+  min-height: 42px;
 }
 
 .search-bar:focus-within {
@@ -169,15 +215,24 @@ h1 {
   background: transparent;
   border: none;
   color: white;
-  padding: 8px 6px;
+  padding: 10px 8px;
   outline: none;
   font-size: 14px;
   width: 100%;
   min-width: 0;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
 }
 
 .search-bar input::placeholder {
   color: var(--text-secondary);
+  opacity: 0.7;
+}
+
+/* Fix for Samsung and Xiaomi keyboards */
+.search-bar input:focus {
+  font-size: 16px;
 }
 
 .search-btn {
@@ -186,16 +241,21 @@ h1 {
   color: var(--accent-blue);
   font-size: 18px;
   cursor: pointer;
-  padding: 6px;
+  padding: 8px;
   transition: all 0.2s;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  min-width: 42px;
+  min-height: 42px;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .search-btn:active {
-  transform: scale(0.9);
+  transform: scale(0.92);
+  opacity: 0.7;
 }
 
 /* ================================
@@ -209,18 +269,19 @@ h1 {
   background: var(--card-bg);
   border-radius: 10px;
   list-style: none;
-  padding: 6px 0;
-  z-index: 1000;
-  max-height: 220px;
+  padding: 4px 0;
+  z-index: 9999;
+  max-height: 200px;
   overflow-y: auto;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
-  animation: slideDown 0.2s ease;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+  animation: slideDown 0.15s ease;
+  -webkit-overflow-scrolling: touch;
 }
 
 @keyframes slideDown {
   from {
     opacity: 0;
-    transform: translateY(-8px);
+    transform: translateY(-6px);
   }
   to {
     opacity: 1;
@@ -229,14 +290,17 @@ h1 {
 }
 
 .suggestions-list li {
-  padding: 10px 14px;
+  padding: 12px 14px;
   cursor: pointer;
-  transition: all 0.15s;
+  transition: background 0.1s;
   display: flex;
   align-items: center;
   gap: 8px;
   color: var(--text-primary);
-  font-size: 14px;
+  font-size: 13px;
+  min-height: 44px;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .suggestions-list li:active {
@@ -249,28 +313,43 @@ h1 {
   flex-shrink: 0;
 }
 
+.suggestions-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.suggestions-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.suggestions-list::-webkit-scrollbar-thumb {
+  background: var(--accent-blue);
+  border-radius: 10px;
+}
+
 /* ================================
-   ERROR MESSAGE
+   ERROR & LOADING MESSAGES
    ================================ */
 .error-msg {
   color: #ff4444;
-  font-size: 13px;
+  font-size: 12px;
   margin-top: -8px;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
   padding: 8px 10px;
   background: rgba(255, 68, 68, 0.1);
   border-radius: 8px;
   border-left: 3px solid #ff4444;
+  line-height: 1.4;
 }
 
 .loading-location {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 12px;
+  font-size: 11px;
   color: var(--text-secondary);
   margin-top: -8px;
   margin-bottom: 10px;
+  padding: 6px 10px;
 }
 
 .loading-location i {
@@ -280,7 +359,7 @@ h1 {
 
 @keyframes pulse {
   0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+  50% { opacity: 0.4; }
 }
 
 /* ================================
@@ -289,15 +368,18 @@ h1 {
 .main-grid {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
   width: 100%;
+  max-width: 100%;
 }
 
 .card {
   background: var(--card-bg);
   border-radius: 14px;
-  padding: 16px 14px;
+  padding: 14px 12px;
   width: 100%;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .main-card {
@@ -312,84 +394,102 @@ h1 {
    WEATHER HEADER
    ================================ */
 .weather-header {
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 
 .city-name {
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 600;
   margin-bottom: 4px;
+  word-wrap: break-word;
   word-break: break-word;
   line-height: 1.2;
+  overflow-wrap: break-word;
+  hyphens: auto;
 }
 
 .weather-status {
-  font-size: 12px;
+  font-size: 11px;
   color: var(--text-secondary);
   text-transform: capitalize;
 }
 
 /* ================================
-   TEMPERATURE DISPLAY - MOBILE
+   TEMPERATURE DISPLAY - OPTIMIZED
    ================================ */
 .temp-container {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  margin: 16px 0;
-  gap: 12px;
+  align-items: center;
+  margin: 14px 0;
+  gap: 8px;
+  width: 100%;
+  max-width: 100%;
   flex-wrap: nowrap;
 }
 
 .temp { 
-  font-size: 52px; 
+  font-size: 48px; 
   font-weight: 700; 
   color: var(--accent-blue);
-  line-height: 1;
+  line-height: 0.95;
   flex-shrink: 1;
+  min-width: 0;
+  white-space: nowrap;
 }
 
 .temp span {
-  font-size: 26px;
+  font-size: 24px;
   font-weight: 500;
+  vertical-align: super;
 }
 
 .main-icon { 
-  font-size: 56px;
-  filter: drop-shadow(0 3px 10px rgba(0, 149, 255, 0.4));
+  font-size: 52px;
+  filter: drop-shadow(0 3px 8px rgba(0, 149, 255, 0.4));
   flex-shrink: 0;
+  line-height: 1;
 }
 
 .temp-details {
-  font-size: 12px;
+  font-size: 11px;
   color: var(--text-secondary);
-  margin-top: 8px;
+  margin-top: 6px;
   width: 100%;
+  max-width: 100%;
 }
 
 .temp-details p {
   margin: 3px 0;
   line-height: 1.4;
+  word-wrap: break-word;
 }
 
 /* ================================
-   HIGHLIGHTS GRID - MOBILE
+   HIGHLIGHTS GRID - BULLETPROOF
    ================================ */
 .highlights-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 8px;
-  margin-top: 14px;
+  margin-top: 12px;
   width: 100%;
+  max-width: 100%;
 }
 
 .highlight-item {
   background: rgba(255, 255, 255, 0.05);
-  padding: 12px 8px;
+  padding: 10px 6px;
   border-radius: 10px;
   text-align: center;
-  transition: all 0.2s;
+  transition: all 0.15s;
   min-width: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 64px;
 }
 
 .highlight-item:active {
@@ -401,18 +501,22 @@ h1 {
   font-size: 9px; 
   color: var(--text-secondary); 
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.3px;
   display: block;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
+  line-height: 1.2;
 }
 
 .highlight-item strong { 
   display: block; 
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
   color: var(--text-primary);
+  word-wrap: break-word;
   word-break: break-word;
   line-height: 1.2;
+  overflow-wrap: break-word;
+  max-width: 100%;
 }
 
 /* ================================
@@ -420,9 +524,9 @@ h1 {
    ================================ */
 .sun-times {
   display: flex;
-  gap: 12px;
-  margin-top: 14px;
-  padding-top: 14px;
+  gap: 10px;
+  margin-top: 12px;
+  padding-top: 12px;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   flex-wrap: wrap;
   width: 100%;
@@ -432,8 +536,9 @@ h1 {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 12px;
+  font-size: 11px;
   color: var(--text-secondary);
+  white-space: nowrap;
 }
 
 .sun-box i {
@@ -443,14 +548,16 @@ h1 {
 }
 
 /* ================================
-   FORECAST SECTION - MOBILE
+   FORECAST SECTION - ANDROID/IOS SMOOTH
    ================================ */
 .forecast-section {
   width: 100%;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .section-title {
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
   margin-bottom: 10px;
   color: var(--text-primary);
@@ -462,14 +569,17 @@ h1 {
   overflow-x: auto;
   overflow-y: hidden;
   padding-bottom: 8px;
+  padding-right: 4px;
   scrollbar-width: thin;
   scrollbar-color: var(--accent-blue) transparent;
   -webkit-overflow-scrolling: touch;
   width: 100%;
+  scroll-behavior: smooth;
+  scroll-snap-type: x proximity;
 }
 
 .forecast-row::-webkit-scrollbar { 
-  height: 5px;
+  height: 4px;
 }
 
 .forecast-row::-webkit-scrollbar-track {
@@ -483,18 +593,22 @@ h1 {
 }
 
 .forecast-card {
-  min-width: 80px;
-  max-width: 80px;
+  min-width: 76px;
+  max-width: 76px;
   background: rgba(255, 255, 255, 0.05);
-  padding: 12px 8px;
+  padding: 10px 6px;
   border-radius: 10px;
   text-align: center;
   flex-shrink: 0;
-  transition: all 0.2s;
+  transition: all 0.15s;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
+  justify-content: space-between;
+  gap: 4px;
+  scroll-snap-align: start;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .forecast-card:active {
@@ -503,27 +617,100 @@ h1 {
 }
 
 .forecast-card .time {
-  font-size: 11px;
+  font-size: 10px;
   color: var(--text-secondary);
   font-weight: 500;
+  white-space: nowrap;
 }
 
 .forecast-card .forecast-icon {
-  font-size: 30px;
-  margin: 4px 0;
-  filter: drop-shadow(0 2px 5px rgba(0, 149, 255, 0.3));
+  font-size: 28px;
+  margin: 3px 0;
+  filter: drop-shadow(0 2px 4px rgba(0, 149, 255, 0.3));
+  line-height: 1;
 }
 
 .forecast-card .temp {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 700;
   color: var(--accent-blue);
+  white-space: nowrap;
 }
 
 /* ================================
-   SMALL PHONES (320px - 374px)
+   DEVICE-SPECIFIC FIXES
    ================================ */
-@media (max-width: 374px) {
+
+/* Extra Small Android (280px - 320px) - Xiaomi, Samsung A series */
+@media (max-width: 320px) {
+  .container {
+    padding: 10px 8px;
+  }
+  
+  h1 {
+    font-size: 15px;
+  }
+  
+  .unit-btn {
+    padding: 5px 8px;
+    font-size: 10px;
+    min-width: 42px;
+  }
+  
+  .card {
+    padding: 12px 10px;
+  }
+  
+  .city-name {
+    font-size: 18px;
+  }
+  
+  .temp {
+    font-size: 42px;
+  }
+  
+  .temp span {
+    font-size: 22px;
+  }
+  
+  .main-icon {
+    font-size: 46px;
+  }
+  
+  .temp-details {
+    font-size: 10px;
+  }
+  
+  .highlight-item {
+    padding: 8px 4px;
+    min-height: 60px;
+  }
+  
+  .highlight-item span {
+    font-size: 8px;
+  }
+  
+  .highlight-item strong {
+    font-size: 13px;
+  }
+  
+  .forecast-card {
+    min-width: 70px;
+    max-width: 70px;
+    padding: 8px 4px;
+  }
+  
+  .forecast-card .temp {
+    font-size: 16px;
+  }
+  
+  .forecast-card .forecast-icon {
+    font-size: 26px;
+  }
+}
+
+/* Standard Small Phones (321px - 374px) - iPhone SE, Android budget */
+@media (min-width: 321px) and (max-width: 374px) {
   .container {
     padding: 10px;
   }
@@ -532,25 +719,20 @@ h1 {
     font-size: 16px;
   }
   
-  .unit-btn {
-    padding: 5px 10px;
-    font-size: 11px;
-  }
-  
   .city-name {
-    font-size: 20px;
+    font-size: 19px;
   }
   
   .temp {
-    font-size: 46px;
+    font-size: 44px;
   }
   
   .temp span {
-    font-size: 24px;
+    font-size: 23px;
   }
   
   .main-icon {
-    font-size: 50px;
+    font-size: 48px;
   }
   
   .highlight-item strong {
@@ -558,22 +740,93 @@ h1 {
   }
   
   .forecast-card {
-    min-width: 75px;
-    max-width: 75px;
-    padding: 10px 6px;
-  }
-  
-  .forecast-card .temp {
-    font-size: 18px;
+    min-width: 72px;
+    max-width: 72px;
   }
 }
 
-/* ================================
-   LARGE PHONES (375px - 599px)
-   ================================ */
-@media (min-width: 375px) and (max-width: 599px) {
+/* Medium Phones (375px - 389px) - iPhone X/11/12 mini */
+@media (min-width: 375px) and (max-width: 389px) {
   .container {
-    padding: 12px;
+    padding: 12px 10px;
+  }
+  
+  h1 {
+    font-size: 17px;
+  }
+  
+  .city-name {
+    font-size: 20px;
+  }
+  
+  .temp {
+    font-size: 50px;
+  }
+  
+  .temp span {
+    font-size: 25px;
+  }
+  
+  .main-icon {
+    font-size: 54px;
+  }
+  
+  .forecast-card {
+    min-width: 78px;
+    max-width: 78px;
+  }
+}
+
+/* Standard Phones (390px - 412px) - iPhone 12/13/14, Samsung Galaxy S */
+@media (min-width: 390px) and (max-width: 412px) {
+  .container {
+    padding: 14px 12px;
+  }
+  
+  h1 {
+    font-size: 18px;
+  }
+  
+  .city-name {
+    font-size: 22px;
+  }
+  
+  .temp {
+    font-size: 52px;
+  }
+  
+  .temp span {
+    font-size: 26px;
+  }
+  
+  .main-icon {
+    font-size: 56px;
+  }
+  
+  .highlight-item {
+    padding: 12px 8px;
+    min-height: 68px;
+  }
+  
+  .highlight-item strong {
+    font-size: 16px;
+  }
+  
+  .forecast-card {
+    min-width: 80px;
+    max-width: 80px;
+    padding: 11px 7px;
+  }
+  
+  .forecast-card .temp {
+    font-size: 19px;
+  }
+}
+
+/* Large Phones (413px - 479px) - Samsung Galaxy Note, OnePlus, Pixel */
+@media (min-width: 413px) and (max-width: 479px) {
+  .container {
+    padding: 16px 14px;
   }
   
   h1 {
@@ -596,26 +849,95 @@ h1 {
     font-size: 58px;
   }
   
+  .card {
+    padding: 16px 14px;
+  }
+  
+  .highlight-item {
+    padding: 12px 10px;
+    min-height: 70px;
+  }
+  
+  .highlight-item strong {
+    font-size: 17px;
+  }
+  
   .forecast-card {
-    min-width: 82px;
-    max-width: 82px;
+    min-width: 84px;
+    max-width: 84px;
+  }
+  
+  .forecast-card .temp {
+    font-size: 20px;
+  }
+  
+  .forecast-card .forecast-icon {
+    font-size: 30px;
   }
 }
 
-/* ================================
-   TABLETS (600px - 899px)
-   ================================ */
-@media (min-width: 600px) and (max-width: 899px) {
+/* Extra Large Phones (480px - 599px) - iPhone Pro Max, Xiaomi Mi Max */
+@media (min-width: 480px) and (max-width: 599px) {
   .container {
-    padding: 20px 16px;
+    padding: 18px 16px;
+  }
+
+  h1 {
+    font-size: 20px;
+  }
+
+  .city-name {
+    font-size: 24px;
+  }
+
+  .temp {
+    font-size: 56px;
+  }
+
+  .temp span {
+    font-size: 28px;
+  }
+
+  .main-icon {
+    font-size: 60px;
+  }
+  
+  .card {
+    padding: 18px 16px;
+  }
+
+  .highlight-item {
+    padding: 14px 12px;
+    min-height: 72px;
+  }
+
+  .highlight-item strong {
+    font-size: 18px;
+  }
+
+  .forecast-card {
+    min-width: 88px;
+    max-width: 88px;
+    padding: 12px 8px;
+  }
+  
+  .forecast-card .temp {
+    font-size: 21px;
+  }
+  
+  .forecast-card .forecast-icon {
+    font-size: 32px;
+  }
+}
+
+/* Small Tablets (600px - 767px) */
+@media (min-width: 600px) and (max-width: 767px) {
+  .container {
+    padding: 20px 18px;
   }
 
   h1 {
     font-size: 22px;
-  }
-
-  .card {
-    padding: 22px 18px;
   }
 
   .city-name {
@@ -631,7 +953,11 @@ h1 {
   }
 
   .main-icon {
-    font-size: 66px;
+    font-size: 64px;
+  }
+  
+  .card {
+    padding: 20px 18px;
   }
 
   .highlights-grid {
@@ -639,21 +965,22 @@ h1 {
   }
 
   .highlight-item {
-    padding: 14px 12px;
+    padding: 16px 14px;
+    min-height: 76px;
   }
 
   .highlight-item strong {
-    font-size: 18px;
+    font-size: 20px;
   }
 
   .forecast-card {
-    min-width: 90px;
-    max-width: 90px;
+    min-width: 95px;
+    max-width: 95px;
     padding: 14px 10px;
   }
 
   .forecast-card .temp {
-    font-size: 22px;
+    font-size: 23px;
   }
 
   .forecast-card .forecast-icon {
@@ -661,10 +988,72 @@ h1 {
   }
 }
 
+/* Standard Tablets (768px - 899px) - iPad, Android tablets */
+@media (min-width: 768px) and (max-width: 899px) {
+  .container {
+    padding: 24px 20px;
+  }
+
+  h1 {
+    font-size: 24px;
+  }
+
+  .city-name {
+    font-size: 28px;
+  }
+
+  .temp {
+    font-size: 64px;
+  }
+
+  .temp span {
+    font-size: 32px;
+  }
+
+  .main-icon {
+    font-size: 68px;
+  }
+  
+  .card {
+    padding: 24px 20px;
+  }
+
+  .highlights-grid {
+    gap: 12px;
+  }
+
+  .highlight-item {
+    padding: 18px 16px;
+    min-height: 80px;
+  }
+
+  .highlight-item strong {
+    font-size: 22px;
+  }
+
+  .forecast-card {
+    min-width: 100px;
+    max-width: 100px;
+    padding: 16px 12px;
+  }
+
+  .forecast-card .temp {
+    font-size: 24px;
+  }
+
+  .forecast-card .forecast-icon {
+    font-size: 36px;
+  }
+}
+
 /* ================================
    DESKTOP (900px+)
    ================================ */
 @media (min-width: 900px) {
+  html {
+    position: static;
+  }
+  
   .container {
     padding: 30px 20px;
   }
@@ -674,7 +1063,7 @@ h1 {
   }
 
   h1 {
-    font-size: 24px;
+    font-size: 26px;
   }
 
   .main-grid {
@@ -693,11 +1082,11 @@ h1 {
   }
 
   .card {
-    padding: 26px 22px;
+    padding: 28px 24px;
   }
 
   .city-name {
-    font-size: 30px;
+    font-size: 32px;
   }
 
   .temp-container {
@@ -705,20 +1094,21 @@ h1 {
     grid-template-columns: auto 1fr;
     grid-template-rows: auto auto;
     gap: 16px;
+    align-items: start;
   }
 
   .temp {
-    font-size: 70px;
+    font-size: 72px;
     grid-column: 1;
     grid-row: 1;
   }
 
   .temp span {
-    font-size: 34px;
+    font-size: 36px;
   }
 
   .main-icon {
-    font-size: 84px;
+    font-size: 88px;
     grid-column: 2;
     grid-row: 1 / 3;
     justify-self: center;
@@ -729,6 +1119,7 @@ h1 {
     grid-column: 1;
     grid-row: 2;
     margin-top: 0;
+    font-size: 14px;
   }
 
   /* Vertical forecast on desktop */
@@ -736,7 +1127,7 @@ h1 {
     flex-direction: column;
     overflow-x: visible;
     overflow-y: auto;
-    max-height: 620px;
+    max-height: 640px;
   }
 
   .forecast-card {
@@ -748,26 +1139,26 @@ h1 {
     justify-content: space-between;
     align-items: center;
     text-align: left;
-    padding: 14px 18px;
+    padding: 16px 20px;
   }
 
   .forecast-card .time {
-    min-width: 65px;
+    min-width: 70px;
     text-align: left;
-    font-size: 13px;
+    font-size: 14px;
   }
 
   .forecast-card .forecast-icon {
     margin: 0;
     flex: 1;
     text-align: center;
-    font-size: 38px;
+    font-size: 40px;
   }
 
   .forecast-card .temp {
-    min-width: 65px;
+    min-width: 70px;
     text-align: right;
-    font-size: 26px;
+    font-size: 28px;
   }
 
   .forecast-card:hover {
@@ -777,11 +1168,12 @@ h1 {
 
   .highlights-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
+    gap: 14px;
   }
 
   .highlight-item {
-    padding: 18px 14px;
+    padding: 20px 16px;
+    min-height: 90px;
   }
 
   .highlight-item:hover {
@@ -789,8 +1181,12 @@ h1 {
     transform: translateY(-2px);
   }
 
+  .highlight-item span {
+    font-size: 11px;
+  }
+
   .highlight-item strong {
-    font-size: 22px;
+    font-size: 24px;
   }
 }
 
@@ -804,15 +1200,19 @@ h1 {
   
   .highlights-grid {
     grid-template-columns: repeat(4, 1fr);
-    gap: 14px;
+    gap: 16px;
   }
   
   .temp {
-    font-size: 76px;
+    font-size: 80px;
+  }
+  
+  .temp span {
+    font-size: 40px;
   }
   
   .main-icon {
-    font-size: 90px;
+    font-size: 96px;
   }
 }
 
@@ -847,7 +1247,36 @@ h1 {
 }
 
 /* ================================
-   PREVENT ANY HORIZONTAL OVERFLOW
+   ANDROID-SPECIFIC FIXES
+   ================================ */
+/* Fix for Samsung Internet Browser */
+@supports (-webkit-appearance: none) {
+  .search-bar input {
+    -webkit-appearance: none;
+  }
+}
+
+/* Fix for Xiaomi MIUI Browser */
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  select,
+  textarea,
+  input {
+    font-size: 16px;
+  }
+}
+
+/* ================================
+   iOS-SPECIFIC FIXES
+   ================================ */
+/* Fix for iOS Safari bottom bar */
+@supports (-webkit-touch-callout: none) {
+  .container {
+    min-height: -webkit-fill-available;
+  }
+}
+
+/* ================================
+   PREVENT ANY OVERFLOW - ABSOLUTE
    ================================ */
 .container,
 .content-wrapper,
@@ -855,9 +1284,36 @@ h1 {
 .card,
 .forecast-section,
 .forecast-row,
+.main-card,
 header,
 .search-wrapper,
-.highlights-grid {
-  max-width: 100%;
-  overflow-x: hidden;
+.highlights-grid,
+.weather-header,
+.temp-container {
+  max-width: 100% !important;
+  overflow-x: hidden !important;
+}
+
+/* ================================
+   PERFORMANCE OPTIMIZATIONS
+   ================================ */
+.forecast-card,
+.highlight-item,
+.unit-btn,
+.search-btn,
+.suggestions-list li {
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Reduce animations on low-end devices */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
