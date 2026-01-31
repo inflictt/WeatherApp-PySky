@@ -1,27 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import Fuse from 'fuse.js';
-import axios from 'axios';
 import { cities } from './cities';
 import './App.css';
 
 function App() {
-  const [inputCity, setInputCity] = useState("San Francisco"); // Current text in search box
-  const [weather, setWeather] = useState(null); // Live weather data from Django
-  const [forecast, setForecast] = useState([]); // 3-hour forecast data
+  const [inputCity, setInputCity] = useState("San Francisco");
+  const [weather, setWeather] = useState(null);
+  const [forecast, setForecast] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [suggestions, setSuggestions] = useState([]); // Fuzzy search results
+  const [suggestions, setSuggestions] = useState([]);
+  const [isCelsius, setIsCelsius] = useState(true);
 
-  // Initialize Fuse.js for fuzzy searching
-  const fuse = new Fuse(cities, {
-    threshold: 0.4, // Lower is more strict, higher is more "fuzzy"
-  });
+  const fuse = new Fuse(cities, { threshold: 0.4 });
 
-  // Handle typing in the search bar
   const onInputChange = (e) => {
     const value = e.target.value;
     setInputCity(value);
-
     if (value.length > 1) {
       const results = fuse.search(value);
       setSuggestions(results.map(r => r.item));
@@ -30,7 +25,11 @@ function App() {
     }
   };
 
-  // Helper: Map OpenWeather icon codes to Phosphor icons
+  const convertTemp = (temp) => {
+    if (isCelsius) return temp;
+    return Math.round((temp * 9) / 5 + 32);
+  };
+
   const getIcon = (code) => {
     const map = {
       '01d': 'ph-sun', '01n': 'ph-moon',
@@ -55,18 +54,14 @@ function App() {
     return new Date((timestamp + timezoneOffset) * 1000).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
   };
 
-  // Main API Call to your Django Backend
   const fetchWeather = async (cityToSearch) => {
     setLoading(true);
     setError(null);
-    setSuggestions([]); // Close suggestions when a search starts
+    setSuggestions([]);
     try {
-      // FIX: Changed 'city' to 'cityToSearch' to match the function parameter
       const response = await fetch(`https://pysky-backend.onrender.com/api/weather?city=${cityToSearch}`);
-      
       if (!response.ok) throw new Error("City not found");
-      
-      const data = await response.json(); 
+      const data = await response.json();
 
       setWeather({
         city: data.city_info.name,
@@ -86,14 +81,14 @@ function App() {
         iconCode: data.current.weather[0].icon
       });
 
-      const forecastList = data.forecast.map(item => ({
+      setForecast(data.forecast.map(item => ({
         time: new Date(item.dt * 1000).toLocaleTimeString([], { hour: 'numeric' }),
         temp: Math.round(item.main.temp),
         icon: getIcon(item.weather[0].icon),
         desc: item.weather[0].main
-      }));
-      setForecast(forecastList);
-      setInputCity(data.city_info.name); // Sync input with official city name
+      })));
+      
+      setInputCity(data.city_info.name); 
     } catch (err) {
       setError("City not found. Please try again.");
     } finally {
@@ -105,99 +100,98 @@ function App() {
     fetchWeather("San Francisco");
   }, []);
 
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
-      fetchWeather(inputCity);
-    }
-  };
-
-  if (loading && !weather) return <div className="container" style={{textAlign:'center', marginTop: '50px'}}>Loading...</div>;
+  if (loading && !weather) return <div className="loader">Loading PySky...</div>;
 
   return (
-    <div className="container">
-      <header>
-        <h1>PySky Weather</h1>
-        <p className="subtitle">Real-time weather data</p>
-        
-        <div className="search-wrapper" style={{ position: 'relative', maxWidth: '500px', margin: '0 auto' }}>
-          <div className="search-bar">
-            <input 
-              type="text" 
-              placeholder="Search city..." 
-              value={inputCity}
-              onChange={onInputChange}
-              onKeyDown={handleKeyDown}
-            />
-            <button className="search-btn" onClick={() => fetchWeather(inputCity)}>
-              <i className="ph-bold ph-magnifying-glass"></i>
+    // UPDATED: Dynamic background class based on weather condition
+    <div className={`container ${weather?.condition.toLowerCase()}`}>
+      <div className="content-wrapper">
+        <header>
+          <div className="header-top">
+            <h1>PySky Weather</h1>
+            <button className="unit-btn" onClick={() => setIsCelsius(!isCelsius)}>
+              {isCelsius ? "→ °F" : "→ °C"}
             </button>
           </div>
-
-          {suggestions.length > 0 && (
-            <ul className="suggestions-list">
-              {suggestions.slice(0, 5).map((city, index) => (
-                <li key={index} onClick={() => fetchWeather(city)}>
-                  <i className="ph ph-map-pin" style={{marginRight: '10px'}}></i>
-                  {city}
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-        {error && <p style={{color: '#ff4d4d', marginTop: '10px', textAlign: 'center'}}>{error}</p>}
-      </header>
-
-      {weather && (
-        <main className="main-grid">
-          <div className="card">
-            <div className="weather-header">
-              <h2 className="city-name">{weather.city}</h2>
-              <p className="weather-status">{weather.condition}</p>
+          
+          <div className="search-wrapper">
+            <div className="search-bar">
+              <input 
+                type="text" 
+                placeholder="Search city..." 
+                value={inputCity}
+                onChange={onInputChange}
+                onKeyDown={(e) => e.key === 'Enter' && fetchWeather(inputCity)}
+              />
+              <button className="search-btn" onClick={() => fetchWeather(inputCity)}>
+                <i className="ph-bold ph-magnifying-glass"></i>
+              </button>
             </div>
 
-            <div className="temp-container">
-              <div className="temp">{weather.temp}<span>°</span></div>
-              <i className={`ph-fill ${getIcon(weather.iconCode)}`} style={{fontSize: '64px', color: '#fff'}}></i>
-              <div className="temp-details">
-                <p>Feels like {weather.feelsLike}°</p>
-                <p>Min: {weather.min}° | Max: {weather.max}°</p>
+            {suggestions.length > 0 && (
+              <ul className="suggestions-list">
+                {suggestions.slice(0, 5).map((city, index) => (
+                  <li key={index} onClick={() => fetchWeather(city)}>
+                    <i className="ph ph-map-pin"></i> {city}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+          {error && <p className="error-msg">{error}</p>}
+        </header>
+
+        {weather && (
+          <main className="main-grid">
+            {/* MAIN SECTION (70%) */}
+            <div className="card main-card">
+              <div className="weather-header">
+                <h2 className="city-name">{weather.city}</h2>
+                <p className="weather-status">{weather.condition}</p>
+              </div>
+
+              <div className="temp-container">
+                <div className="temp">
+                  {convertTemp(weather.temp)}<span>°{isCelsius ? 'C' : 'F'}</span>
+                </div>
+                <i className={`ph-fill ${getIcon(weather.iconCode)} main-icon`}></i>
+                <div className="temp-details">
+                  <p>Feels like {convertTemp(weather.feelsLike)}°</p>
+                  <p>L: {convertTemp(weather.min)}° | H: {convertTemp(weather.max)}°</p>
+                </div>
+              </div>
+
+              <div className="highlights-grid">
+                <div className="highlight-item"><span>Humidity</span><strong>{weather.humidity}</strong></div>
+                <div className="highlight-item"><span>Wind</span><strong>{weather.windSpeed} {weather.windDir}</strong></div>
+                <div className="highlight-item"><span>Pressure</span><strong>{weather.pressure}</strong></div>
+                <div className="highlight-item"><span>Visibility</span><strong>{weather.visibility}</strong></div>
+              </div>
+
+              <div className="sun-times">
+                <div className="sun-box"><i className="ph-fill ph-sun-horizon"></i> {weather.sunrise}</div>
+                <div className="sun-box"><i className="ph-fill ph-moon-stars"></i> {weather.sunset}</div>
               </div>
             </div>
 
-            <div className="highlights-grid">
-              <div className="highlight-card"><div className="highlight-title">Humidity</div><div className="highlight-value">{weather.humidity}</div></div>
-              <div className="highlight-card"><div className="highlight-title">Wind Speed</div><div className="highlight-value">{weather.windSpeed}</div></div>
-              <div className="highlight-card"><div className="highlight-title">Wind Direction</div><div className="highlight-value" style={{display: 'flex', alignItems: 'center', gap: '5px'}}><i className="ph-fill ph-arrow-up-right"></i> {weather.windDir}</div></div>
-              <div className="highlight-card"><div className="highlight-title">Pressure</div><div className="highlight-value" style={{color: '#0095FF'}}>{weather.pressure}</div></div>
-              <div className="highlight-card"><div className="highlight-title">Visibility</div><div className="highlight-value" style={{color: '#0095FF'}}>{weather.visibility}</div></div>
-              <div className="highlight-card"><div className="highlight-title">Cloudiness</div><div className="highlight-value" style={{color: '#0095FF'}}>{weather.cloudiness}</div></div>
+            {/* SIDEBAR SECTION (30%) */}
+            <div className="forecast-section">
+              <h3 className="section-title">Next 24 Hours</h3>
+              <div className="forecast-row">
+                {forecast.slice(0, 8).map((item, index) => (
+                  <div className="forecast-card" key={index}>
+                    <span className="time">{item.time}</span>
+                    <i className={`forecast-icon ${item.icon}`}></i> 
+                    <span className="temp">{convertTemp(item.temp)}°</span>
+                  </div>
+                ))}
+              </div>
             </div>
-
-            <div className="sun-times">
-              <div className="sun-item"><i className="ph-fill ph-sun-horizon" style={{color: '#FFD700', fontSize: '24px'}}></i><div><div style={{fontSize: '12px', color: '#9399A2'}}>Sunrise</div><div>{weather.sunrise}</div></div></div>
-              <div className="sun-item"><i className="ph-fill ph-moon-stars" style={{color: '#FFD700', fontSize: '24px'}}></i><div><div style={{fontSize: '12px', color: '#9399A2'}}>Sunset</div><div>{weather.sunset}</div></div></div>
-            </div>
-          </div>
-
-          <div className="forecast-section">
-            <h3 className="forecast-title">3-Hour Forecast</h3>
-            <div className="forecast-row">
-              {forecast.map((item, index) => (
-                <div className="forecast-card" key={index}>
-                  <span className="forecast-time">{item.time}</span>
-                  <i className={`forecast-icon ${item.icon}`}></i> 
-                  <span className="forecast-temp">{item.temp}°</span>
-                  <span className="forecast-desc">{item.desc}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </main>
-      )}
+          </main>
+        )}
+      </div>
     </div>
   );
 }
 
-
 export default App;
- 
