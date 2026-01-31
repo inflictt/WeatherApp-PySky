@@ -61,9 +61,10 @@ function App() {
     setError(null);
     setSuggestions([]); // Close suggestions when a search starts
     try {
-      const response = await axios.get(`http://127.0.0.1:8000/api/weather?city=${cityToSearch}`);
-      const data = response.data;
-
+      const response = await fetch(`https://pysky-backend.onrender.com/api/weather?city=${city}`);
+      // const data = response.data;
+      const data = await response.json(); // This is the correct way for fetch()
+      
       setWeather({
         city: data.city_info.name,
         condition: data.current.weather[0].main,
