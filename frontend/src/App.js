@@ -61,10 +61,13 @@ function App() {
     setError(null);
     setSuggestions([]); // Close suggestions when a search starts
     try {
-      const response = await fetch(`https://pysky-backend.onrender.com/api/weather?city=${city}`);
-      // const data = response.data;
-      const data = await response.json(); // This is the correct way for fetch()
+      // FIX: Changed 'city' to 'cityToSearch' to match the function parameter
+      const response = await fetch(`https://pysky-backend.onrender.com/api/weather?city=${cityToSearch}`);
       
+      if (!response.ok) throw new Error("City not found");
+      
+      const data = await response.json(); 
+
       setWeather({
         city: data.city_info.name,
         condition: data.current.weather[0].main,
@@ -113,10 +116,9 @@ function App() {
   return (
     <div className="container">
       <header>
-        <h1>Weather App</h1>
+        <h1>PySky Weather</h1>
         <p className="subtitle">Real-time weather data</p>
         
-        {/* Search Wrapper for Suggestions Positioning */}
         <div className="search-wrapper" style={{ position: 'relative', maxWidth: '500px', margin: '0 auto' }}>
           <div className="search-bar">
             <input 
@@ -131,7 +133,6 @@ function App() {
             </button>
           </div>
 
-          {/* Suggestions List */}
           {suggestions.length > 0 && (
             <ul className="suggestions-list">
               {suggestions.slice(0, 5).map((city, index) => (
